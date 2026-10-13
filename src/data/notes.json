@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "fdf33a5e-3374-480e-bc80-01d5f07d6258",
+    "title": "HOLA CARA DE BOLA",
+    "content": "Vamos a ver si funciona el metodo de actualizar",
+    "createdAt": "2026-10-13T12:38:29.098Z",
+    "updatedAt": "2026-10-13T12:38:29.098Z"
+  },
+  {
+    "id": "ee9ef679-4a9b-429a-86ae-80315f57318c",
+    "title": "HOLA CARA DE BOLA",
+    "content": "Vamos a ver si funciona el metodo de actualizar",
+    "createdAt": "2026-10-13T12:38:30.098Z",
+    "updatedAt": "2026-10-13T12:38:30.098Z"
+  }
+]

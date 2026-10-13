@@ -30,7 +30,7 @@ export const getByID = async (noteId) => {
 };
 
 export const addNewNote = async (note) => {
-  withLocke(async () => {
+  return withLocke(async () => {
     const notes = await readNotes();
 
     const newNote = {
@@ -38,7 +38,7 @@ export const addNewNote = async (note) => {
       title: note.title,
       content: note.content,
       createdAt: new Date().toISOString(),
-      lastUpdate: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
     notes.push(newNote);
@@ -49,7 +49,7 @@ export const addNewNote = async (note) => {
 };
 
 export const editNote = async (noteId, noteUpdate) => {
-  withLocke(async () => {
+  return withLocke(async () => {
     const notes = await readNotes();
     const noteIndex = notes.findIndex((N) => N.id === noteId);
 
@@ -72,7 +72,7 @@ export const editNote = async (noteId, noteUpdate) => {
 };
 
 export const removeNotes = async (noteID) => {
-  withLocke(async () => {
+  return withLocke(async () => {
     const notes = await readNotes();
     const noteIndex = notes.findIndex((N) => N.id === noteID);
 
