@@ -4,9 +4,23 @@ import {
   addNewNote,
   removeNotes,
   editNote,
-} from "../HTTP/services/service.js";
+} from "../services/service.js";
 
 export class notesController {
+  static validateText(title, content) {
+    if (typeof title !== "string" || !title.trim() || title.length > 100) {
+      return "title is required (string, 1-100 chars)";
+    }
+    if (
+      typeof content !== "string" ||
+      !content.trim() ||
+      content.length > 1000
+    ) {
+      return "content is required (string, 1-1000 chars)";
+    }
+    return null;
+  }
+
   static async getNotes(req, res) {
     const readNotes = await getAllNotes();
     return res.status(200).json(readNotes);
@@ -23,19 +37,15 @@ export class notesController {
     if (!note) {
       return res.status(404).json({ message: "Note not found." });
     }
-    return res.status(302).json(note);
+    return res.status(200).json(note);
   }
 
   static async createNote(req, res) {
     const newNote = req.body;
 
-    if (
-      !newNote.title.trim() ||
-      newNote.title.length > 100 ||
-      !newNote.content.trim() ||
-      newNote.content.length > 1000
-    ) {
-      return res.status(400).json({ message: "Note data can't be empty." });
+    const error = notesController.validateText(newNote.title, newNote.content);
+    if (error) {
+      return res.status(400).json({ message: error });
     }
 
     try {
@@ -43,26 +53,25 @@ export class notesController {
       return res.status(201).json(note);
     } catch (error) {
       console.error(error);
-      return res.status(400).json({ message: "Note could not be created." });
+      return res.status(500).json({ message: "Note could not be created." });
     }
   }
 
   static async modifyNote(req, res) {
-    const { id } = req.params;
+    const { noteId } = req.params;
     const note = req.body;
 
-    if (!note.title.trim() || !note.content.trim()) {
-      return res.status(400).json({
-        message: "It's not valid to update data with empty informacion.",
-      });
+    const error = notesController.validateText(note.title, note.content);
+    if (error) {
+      return res.status(400).json({ message: error });
     }
 
     try {
-      const newNote = await editNote(id, note);
+      const newNote = await editNote(noteId, note);
       return res.status(200).json({ message: "Note updated", newNote });
     } catch (error) {
       console.error(error);
-      return res.status(400).json({ message: "Note couldn't be updated" });
+      return res.status(500).json({ message: "Note couldn't be updated" });
     }
   }
 
@@ -80,6 +89,6 @@ export class notesController {
         .json({ message: "Note do not exist in the data base." });
     }
 
-    return res.status(204).json({ message: "Note deleted" });
+    return res.status(200).json({ message: "Note deleted" });
   }
 }
